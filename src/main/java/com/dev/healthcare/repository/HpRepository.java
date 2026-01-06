@@ -4,4 +4,5 @@ import com.dev.healthcare.entity.HealthPolicy;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HpRepository extends JpaRepository<HealthPolicy,Long> {
+    boolean existsByPolicyNumber(String policyNumber);
 }
