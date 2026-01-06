@@ -1,4 +1,8 @@
 package com.dev.healthcare;
 
-public class PolicyStatus {
+public enum PolicyStatus {
+    ACTIVE,
+    INACTIVE,
+    EXPIRED,
+    CANCELLED
 }

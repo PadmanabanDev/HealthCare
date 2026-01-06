@@ -1,0 +1,10 @@
+Spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/healthcare_db?createDatabaseIfNotExist=true
+    username: root
+    password: 7113
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
