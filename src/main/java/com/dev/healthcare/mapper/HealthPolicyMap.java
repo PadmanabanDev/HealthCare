@@ -32,11 +32,11 @@ public class HealthPolicyMap {
         return dto;
     }
 
-    public void updateEntity(HealthPolicy entity, HPReqDto dto){
-        entity.setPolicyType(dto.getPolicyType());
-        entity.setPolicyName(dto.getPolicyName());
-        entity.setPolicyStartDate(dto.getPolicyStartDate());
-        entity.setPolicyEndDate(dto.getPolicyEndDate());
-        entity.setStatus(dto.getStatus());
-    }
+//    public void updateEntity(HealthPolicy entity, HPReqDto dto){
+//        entity.setPolicyType(dto.getPolicyType());
+//        entity.setPolicyName(dto.getPolicyName());
+//        entity.setPolicyStartDate(dto.getPolicyStartDate());
+//        entity.setPolicyEndDate(dto.getPolicyEndDate());
+//        entity.setStatus(dto.getStatus());
+//    }
 }

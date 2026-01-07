@@ -31,6 +31,9 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
+        // 🔴 TEMP DEBUG LOG
+        ex.printStackTrace();
+
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Something went wrong. Please contact support.",
