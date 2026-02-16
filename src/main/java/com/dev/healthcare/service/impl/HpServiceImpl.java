@@ -31,7 +31,8 @@ public class HpServiceImpl implements HpService {
 
         if (repository.existsByPolicyNumber(dto.getPolicyNumber())) {
             throw new BadRequestException(
-                    "Policy number already exists: " + dto.getPolicyNumber()
+                    "Policy num" +
+                            "ber already exists: " + dto.getPolicyNumber()
             );
         }
         HealthPolicy healthPolicy = mapper.toEntity(dto);
