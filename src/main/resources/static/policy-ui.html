@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Health Policy Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .card {
+            border-radius: 12px;
+        }
+        pre {
+            background: #eef1f6;
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+
+    <h2 class="text-center mb-4">🏥 Health Policy Management</h2>
+
+    <!-- ALERT MESSAGE -->
+    <div id="alertBox"></div>
+
+    <!-- CREATE POLICY -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">Create Policy</div>
+        <div class="card-body">
+
+            <input class="form-control mb-2" id="policyNumber" placeholder="Policy Number">
+            <input class="form-control mb-2" id="policyName" placeholder="Policy Name">
+
+            <select class="form-control mb-2" id="policyType">
+                <option value="">Select Policy Type</option>
+                <option value="INDIVIDUAL">INDIVIDUAL</option>
+                <option value="FAMILY">FAMILY</option>
+            </select>
+
+            <label>Start Date</label>
+            <input type="date" class="form-control mb-2" id="startDate">
+
+            <label>End Date</label>
+            <input type="date" class="form-control mb-2" id="endDate">
+
+            <select class="form-control mb-3" id="status">
+                <option value="">Select Status</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="INACTIVE">INACTIVE</option>
+            </select>
+
+            <button class="btn btn-success w-100" onclick="createPolicy()">Create Policy</button>
+        </div>
+    </div>
+
+    <!-- GET POLICY -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">Get Policy</div>
+        <div class="card-body">
+
+            <input class="form-control mb-2" id="searchId" placeholder="Policy ID">
+            <button class="btn btn-info w-100 mb-3" onclick="getPolicyById()">Get By ID</button>
+
+            <input class="form-control mb-2" id="searchNumber" placeholder="Policy Number">
+            <button class="btn btn-info w-100" onclick="getPolicyByNumber()">Get By Policy Number</button>
+        </div>
+    </div>
+
+    <!-- UPDATE POLICY -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning">Update Policy</div>
+        <div class="card-body">
+
+            <input class="form-control mb-2" id="updateId" placeholder="Policy ID">
+            <input class="form-control mb-2" id="updatePolicyNumber" placeholder="Policy Number">
+            <input class="form-control mb-2" id="updateName" placeholder="Policy Name">
+
+            <select class="form-control mb-2" id="updateType">
+                <option value="INDIVIDUAL">INDIVIDUAL</option>
+                <option value="FAMILY">FAMILY</option>
+            </select>
+
+            <label>Start Date</label>
+            <input type="date" class="form-control mb-2" id="updateStart">
+
+            <label>End Date</label>
+            <input type="date" class="form-control mb-2" id="updateEnd">
+
+            <select class="form-control mb-3" id="updateStatus">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="INACTIVE">INACTIVE</option>
+            </select>
+
+            <button class="btn btn-warning w-100" onclick="updatePolicy()">Update Policy</button>
+        </div>
+    </div>
+
+    <!-- RESPONSE BOX -->
+    <div class="card">
+        <div class="card-header bg-dark text-white">API Response</div>
+        <div class="card-body">
+            <pre id="responseBox">No response yet</pre>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const BASE_URL = "http://localhost:8080/api/policies";
+
+    function showAlert(type, message) {
+        document.getElementById("alertBox").innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`;
+    }
+
+    async function handleResponse(res) {
+        let data = {};
+        try {
+            data = await res.json();
+        } catch (e) {}
+
+        if (res.status === 201) {
+            showAlert("success", "✅ Policy created successfully");
+        } else if (res.status === 200) {
+            showAlert("success", "✅ Operation successful");
+        } else if (res.status === 400) {
+            showAlert("warning", "⚠ Validation or bad request error");
+        } else if (res.status === 404) {
+            showAlert("danger", "❌ Policy not found");
+        } else {
+            showAlert("danger", "❌ Server error");
+        }
+
+        document.getElementById("responseBox").textContent =
+            JSON.stringify(data, null, 2);
+    }
+
+    async function createPolicy() {
+        const body = {
+            policyNumber: document.getElementById("policyNumber").value,
+            policyName: document.getElementById("policyName").value,
+            policyType: document.getElementById("policyType").value,
+            policyStartDate: document.getElementById("startDate").value,
+            policyEndDate: document.getElementById("endDate").value,
+            status: document.getElementById("status").value
+        };
+
+        const res = await fetch(BASE_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+
+        handleResponse(res);
+    }
+
+    async function getPolicyById() {
+        const id = document.getElementById("searchId").value;
+        const res = await fetch(`${BASE_URL}/policy-id/${id}`);
+        handleResponse(res);
+    }
+
+    async function getPolicyByNumber() {
+        const number = document.getElementById("searchNumber").value;
+        const res = await fetch(`${BASE_URL}/policy-number/${number}`);
+        handleResponse(res);
+    }
+
+    async function updatePolicy() {
+        const id = document.getElementById("updateId").value;
+
+        const body = {
+            policyNumber: document.getElementById("updatePolicyNumber").value,
+            policyName: document.getElementById("updateName").value,
+            policyType: document.getElementById("updateType").value,
+            startDate: document.getElementById("updateStart").value,
+            endDate: document.getElementById("updateEnd").value,
+            status: document.getElementById("updateStatus").value
+        };
+
+        const res = await fetch(`${BASE_URL}/${id}`, {
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(body)
+        });
+
+        handleResponse(res);
+    }
+</script>
+
+</body>
+</html>
